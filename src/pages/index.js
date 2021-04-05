@@ -6,11 +6,10 @@ import Image from "../components/image";
 import SEO from "../components/seo";
 import { graphql, StaticQuery } from "gatsby";
 
-const IndexPage = (props) => (
+const IndexPage = () => (
   <Layout>
+{/* //querying wordpress page object with graphql */}
     <StaticQuery
-    //querying wordpress page object
-    //with graphql
       query={graphql`
         {
           allWordpressPage {
@@ -26,12 +25,14 @@ const IndexPage = (props) => (
       `}
       //above was mapped to the props below. allWordpress page returns an array which is mapped 
       //to the edges property after query completes array of edges
-      render={props.allWordpressPage.edges.map((page) => (
+      render={query => ( query.allWordpressPage.edges.map((page) => (
         <div key={page.node.id}>
           <h1>{page.node.title}</h1>
+          <div dangerouslySetInnerHTML={{__html: page.node.content}} />
         </div>
-      ))}
+      )))}
     />
+
   </Layout>
 );
 
