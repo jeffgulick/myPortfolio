@@ -1,22 +1,38 @@
-import React from "react"
-import { Link } from "gatsby"
+import React from "react";
+import { Link } from "gatsby";
 
-import Layout from "../components/layout"
-import Image from "../components/image"
-import SEO from "../components/seo"
+import Layout from "../components/layout";
+import Image from "../components/image";
+import SEO from "../components/seo";
+import { graphql, StaticQuery } from "gatsby";
 
-const IndexPage = () => (
+const IndexPage = (props) => (
   <Layout>
-    <SEO title="Home" />
-    <h1>Hi people</h1>
-    <p>Welcome to your new Gatsby site.</p>
-    <p>Now go build something great.</p>
-    <div style={{ maxWidth: `300px`, marginBottom: `1.45rem` }}>
-      <Image />
-    </div>
-    <Link to="/page-2/">Go to page 2</Link> <br />
-    <Link to="/using-typescript/">Go to "Using TypeScript"</Link>
+    <StaticQuery
+    //querying wordpress page object
+    //with graphql
+      query={graphql`
+        {
+          allWordpressPage {
+            edges {
+              node {
+                id
+                title
+                content
+              }
+            }
+          }
+        }
+      `}
+      //above was mapped to the props below. allWordpress page returns an array which is mapped 
+      //to the edges property after query completes array of edges
+      render={props.allWordpressPage.edges.map((page) => (
+        <div key={page.node.id}>
+          <h1>{page.node.title}</h1>
+        </div>
+      ))}
+    />
   </Layout>
-)
+);
 
-export default IndexPage
+export default IndexPage;
